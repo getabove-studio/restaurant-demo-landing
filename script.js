@@ -16,6 +16,7 @@ function openModal() {
     if (modalForm) {
         modalForm.reset();
         modalForm.classList.remove('hidden');
+        // Очищаем старые ошибки
         ['name-error', 'phone-error', 'agree-error'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
     }
     if (modalSuccess) modalSuccess.classList.add('hidden');
@@ -35,7 +36,7 @@ if (modal) {
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
 /* =========================================
-   3. ОТПРАВКА ФОРМЫ
+   3. ОТПРАВКА ФОРМЫ В TELEGRAM
    ========================================= */
 async function handleFormSubmit(e) {
     e.preventDefault();
@@ -44,6 +45,7 @@ async function handleFormSubmit(e) {
     const agree = document.getElementById('modal-agree');
     let valid = true;
 
+    // Валидация
     if (!name.value.trim()) {
         name.classList.add('border-red-500'); document.getElementById('name-error').classList.remove('hidden'); valid = false;
     } else name.classList.remove('border-red-500');
@@ -58,25 +60,43 @@ async function handleFormSubmit(e) {
 
     if (!valid) return;
 
+    // Меняем кнопку на "Отправка..."
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Отправка...';
     submitBtn.disabled = true;
 
     try {
+        // Стучимся в нашу Netlify-функцию (она лежит в папке netlify/functions/send-telegram.js)
         const response = await fetch('/.netlify/functions/send-telegram', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name.value, phone: phone.value })
+            body: JSON.stringify({ 
+                name: name.value, 
+                phone: phone.value 
+            })
         });
-        if (!response.ok) throw new Error('Ошибка');
+
+        if (!response.ok) throw new Error('Ошибка сервера');
+
+        // Успех
         if (modalHeader) modalHeader.classList.add('hidden');
         if (modalForm) modalForm.classList.add('hidden');
         if (modalSuccess) modalSuccess.classList.remove('hidden');
         setTimeout(closeModal, 4000);
+
     } catch (error) {
-        console.error(error);
-        alert('Ошибка отправки. Попробуйте позже.');
+        console.error('Ошибка отправки:', error);
+        // Вместо alert выводим красивую красную плашку прямо в форме
+        let errorBox = document.getElementById('form-global-error');
+        if (!errorBox) {
+            errorBox = document.createElement('p');
+            errorBox.id = 'form-global-error';
+            errorBox.className = 'text-red-500 text-xs text-center mt-2';
+            submitBtn.parentNode.appendChild(errorBox);
+        }
+        errorBox.textContent = 'Не удалось отправить. Попробуйте позже.';
+        
     } finally {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
@@ -86,7 +106,7 @@ async function handleFormSubmit(e) {
 document.getElementById('modal-form')?.addEventListener('submit', handleFormSubmit);
 
 /* =========================================
-   4. МОБИЛЬНОЕ МЕНЮ (Без смены иконок)
+   4. МОБИЛЬНОЕ МЕНЮ
    ========================================= */
 function toggleMenu() {
     if (!mobileMenu) return;
@@ -140,18 +160,12 @@ const floatingBtn = document.getElementById('floating-btn');
 const footer = document.getElementById('contacts');
 
 if (floatingBtn && footer) {
-    // Следим за скроллом
     window.addEventListener('scroll', () => {
         const footerRect = footer.getBoundingClientRect();
-        
-        // Если верх футера показался на экране (с отступом в 100px)
-        // Или если мы проскроллили до самого низа
         if (footerRect.top < window.innerHeight - 50) {
-            // Прячем кнопку
             floatingBtn.classList.add('translate-y-24', 'opacity-0');
             floatingBtn.classList.remove('translate-y-0', 'opacity-100');
         } else {
-            // Показываем кнопку
             floatingBtn.classList.remove('translate-y-24', 'opacity-0');
             floatingBtn.classList.add('translate-y-0', 'opacity-100');
         }
