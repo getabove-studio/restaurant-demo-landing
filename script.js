@@ -16,12 +16,25 @@ function openModal() {
     if (modalForm) {
         modalForm.reset();
         modalForm.classList.remove('hidden');
-        // Очищаем старые ошибки
+        
+        // Очищаем старые текстовые ошибки
         ['name-error', 'phone-error', 'agree-error'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+        
+        // Очищаем красные обводки (кольца) с полей ввода
+        ['modal-name', 'modal-phone'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('border-red-400', 'ring-red-100', 'ring-4');
+        });
+        
+        // Удаляем глобальную плашку ошибки, если она была
+        const errBox = document.getElementById('form-global-error');
+        if (errBox) errBox.remove();
     }
     if (modalSuccess) modalSuccess.classList.add('hidden');
     if (modal) modal.classList.remove('hidden');
     document.body.classList.add('modal-open');
+    
+    // Автофокус на поле имени
     setTimeout(() => document.getElementById('modal-name')?.focus(), 50);
 }
 
@@ -36,44 +49,70 @@ if (modal) {
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
 /* =========================================
-   3. ОТПРАВКА ФОРМЫ В TELEGRAM
+   3. ОТПРАВКА ФОРМЫ В TELEGRAM (С ПРОВЕРКОЙ)
    ========================================= */
 async function handleFormSubmit(e) {
     e.preventDefault();
-    const name = document.getElementById('modal-name');
-    const phone = document.getElementById('modal-phone');
-    const agree = document.getElementById('modal-agree');
+    
+    const nameInput = document.getElementById('modal-name');
+    const phoneInput = document.getElementById('modal-phone');
+    const agreeInput = document.getElementById('modal-agree');
+    
+    const nameError = document.getElementById('name-error');
+    const phoneError = document.getElementById('phone-error');
+    const agreeError = document.getElementById('agree-error');
+
+    if (!nameInput || !phoneInput) return;
+
+    // 1. Сбрасываем старые ошибки перед новой проверкой
+    [nameInput, phoneInput].forEach(i => i.classList.remove('border-red-400', 'ring-red-100', 'ring-4'));
+    if (nameError) nameError.classList.add('hidden');
+    if (phoneError) phoneError.classList.add('hidden');
+    if (agreeError) agreeError.classList.add('hidden');
+
     let valid = true;
 
-    // Валидация
-    if (!name.value.trim()) {
-        name.classList.add('border-red-500'); document.getElementById('name-error').classList.remove('hidden'); valid = false;
-    } else name.classList.remove('border-red-500');
-
-    if (phone.value.replace(/\D/g, '').length < 10) {
-        phone.classList.add('border-red-500'); document.getElementById('phone-error').classList.remove('hidden'); valid = false;
-    } else phone.classList.remove('border-red-500');
-
-    if (!agree.checked) {
-        document.getElementById('agree-error').classList.remove('hidden'); valid = false;
+    // 2. Проверка Имени
+    if (!nameInput.value.trim()) {
+        nameInput.classList.add('border-red-400', 'ring-red-100', 'ring-4');
+        if (nameError) nameError.classList.remove('hidden');
+        valid = false;
     }
 
-    if (!valid) return;
+    // 3. Проверка Телефона (только цифры, длина строго от 10 до 11)
+    const digits = phoneInput.value.replace(/\D/g, '');
+    if (digits.length < 10 || digits.length > 11) {
+        phoneInput.classList.add('border-red-400', 'ring-red-100', 'ring-4');
+        if (phoneError) phoneError.classList.remove('hidden');
+        valid = false;
+    }
+    
+    // 4. Проверка Чекбокса
+    if (agreeInput && !agreeInput.checked) {
+        if (agreeError) agreeError.classList.remove('hidden');
+        valid = false;
+    }
 
-    // Меняем кнопку на "Отправка..."
+    // Если есть ошибки — прерываем отправку
+    if (!valid) return; 
+
+    // --- ЛОГИКА ОТПРАВКИ В TELEGRAM ---
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Отправка...';
     submitBtn.disabled = true;
 
+    // Убираем старую глобальную ошибку, если она была
+    const oldErrorBox = document.getElementById('form-global-error');
+    if (oldErrorBox) oldErrorBox.remove();
+
     try {
-        // Стучимся в нашу Netlify-функцию (она лежит в папке netlify/functions/send-telegram.js)
         const response = await fetch('/.netlify/functions/send-telegram', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                name: name.value, 
-                phone: phone.value 
+                name: nameInput.value, 
+                phone: phoneInput.value 
             })
         });
 
@@ -83,21 +122,26 @@ async function handleFormSubmit(e) {
         if (modalHeader) modalHeader.classList.add('hidden');
         if (modalForm) modalForm.classList.add('hidden');
         if (modalSuccess) modalSuccess.classList.remove('hidden');
+        
+        // Очищаем форму после успешной отправки (чтобы при следующем открытии было пусто)
+        modalForm.reset();
         setTimeout(closeModal, 4000);
 
     } catch (error) {
         console.error('Ошибка отправки:', error);
-        // Вместо alert выводим красивую красную плашку прямо в форме
+        
+        // Выводим красную плашку под кнопкой
         let errorBox = document.getElementById('form-global-error');
         if (!errorBox) {
             errorBox = document.createElement('p');
             errorBox.id = 'form-global-error';
-            errorBox.className = 'text-red-500 text-xs text-center mt-2';
+            errorBox.className = 'text-red-500 text-xs text-center mt-2 font-semibold';
             submitBtn.parentNode.appendChild(errorBox);
         }
-        errorBox.textContent = 'Не удалось отправить. Попробуйте позже.';
+        errorBox.textContent = 'Не удалось отправить. Проверьте интернет или попробуйте позже.';
         
     } finally {
+        // Возвращаем кнопку в исходное состояние
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     }
