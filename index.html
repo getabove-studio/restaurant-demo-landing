@@ -19,16 +19,16 @@
     <meta name="twitter:title" content="Basilico — Fine Dining">
     <meta name="twitter:description" content="Итальянский ресторан в Алматы. Забронируйте стол.">
     <meta name="twitter:image" content="https://basilico-demo.netlify.app/pictures/og-image.jpg">
+    
     <title>Basilico — Fine Dining</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dist/output.css">
     <link rel="stylesheet" href="style.css">
-
-        <!-- Favicon -->
-     <link rel="icon" href="favicon.svg" sizes="any">
-   
 </head>
 <body class="antialiased bg-brand-dark text-brand-text font-sans selection:bg-brand-gold selection:text-brand-dark">
 
@@ -36,7 +36,6 @@
     <header class="fixed top-0 left-0 w-full z-50 bg-brand-dark/80 backdrop-blur-md border-b border-white/5 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 lg:px-8 h-24 flex items-center justify-between relative">
             
-            <!-- Логотип -->
             <div class="flex items-center gap-6">
                 <a href="#" class="flex items-center gap-3 group shrink-0">
                     <span class="text-2xl sm:text-3xl font-serif font-bold text-white tracking-widest uppercase hover:text-brand-gold transition-colors">Basilico</span>
@@ -46,43 +45,32 @@
                 </span>
             </div>
 
-            <!-- Меню (только для ПК) -->
             <nav class="hidden lg:flex items-center gap-8 font-medium text-xs tracking-widest uppercase text-gray-400 absolute left-1/2 -translate-x-1/2">
                 <a href="#about" class="hover:text-brand-gold transition-colors whitespace-nowrap">О нас</a>
                 <a href="#menu" class="hover:text-brand-gold transition-colors whitespace-nowrap">Меню</a>
                 <a href="#contacts" class="hover:text-brand-gold transition-colors whitespace-nowrap">Контакты</a>
             </nav>
 
-            <!-- Правая часть -->
             <div class="flex items-center gap-3 sm:gap-4 shrink-0">
-                
-                <!-- Ссылка на карту (с текстом на мобилке) -->
                 <a href="https://2gis.kz/almaty/search/пр. Серкебаева 146/8" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-1.5 text-gray-400 hover:text-brand-gold transition-colors text-[10px] sm:text-xs tracking-widest uppercase" aria-label="На карте">
                     <i class="fa-solid fa-location-dot text-brand-gold text-sm sm:text-base group-hover:scale-110 transition-transform"></i>
                     <span>НА КАРТЕ</span>
                 </a>
-
                 <div class="hidden lg:block w-px h-5 bg-white/20"></div>
-
-                <!-- Кнопка "Забронировать" (ТОЛЬКО для ПК) -->
                 <button onclick="openModal()" class="hidden lg:block bg-brand-gold text-brand-dark hover:bg-[#FFEA70] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] transition-all duration-300 px-6 py-3 text-xs tracking-widest uppercase font-bold whitespace-nowrap rounded-sm">
                     Забронировать
                 </button>
             </div>
-
         </div>
     </header>
 	
     <!-- 1. HERO -->
     <section class="relative h-screen flex flex-col justify-end overflow-hidden pb-32">
-        
         <div class="absolute inset-0 z-0">
             <img src="pictures/table.jpg" alt="Итальянский ресторан" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-brand-dark"></div>
             <div class="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-brand-dark to-transparent"></div>
         </div>
-
-        <!-- Плашка -->
         <div class="relative z-10 text-center w-full max-w-4xl mx-auto py-12 px-4">
             <div class="absolute inset-0 bg-black/40 backdrop-blur-md" style="mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);"></div>
             <div class="relative z-10 flex flex-col items-center">
@@ -97,26 +85,22 @@
         </div>
     </section>
 
-    <!-- 2. О НАС (ФИЛОСОФИЯ) -->
+    <!-- 2. О НАС -->
     <section id="about" class="py-24 bg-brand-dark relative border-t border-white/5 overflow-hidden">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
             <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-                
                 <div class="w-full lg:w-1/2 reveal">
                     <span class="text-brand-gold tracking-[0.3em] uppercase text-xs mb-4 block font-semibold">Наша философия</span>
                     <h2 class="text-4xl lg:text-6xl font-serif text-white mb-8 leading-tight">
                         Искусство <br/>
                         <span class="italic text-brand-gold font-light text-glow-gold">в каждой детали</span>
                     </h2>
-                    
                     <p class="text-gray-400 font-light text-lg leading-relaxed mb-6">
                         Мы создали Basilico как место, где время теряет свое значение. Здесь нет места суете. Только приглушенный свет, изысканные вина и кухня, которая граничит с искусством.
                     </p>
                     <p class="text-gray-400 font-light text-lg leading-relaxed mb-10">
                         Мы не просто готовим еду — мы создаем воспоминания, которые останутся с вами надолго после того, как вы покинете наш зал. Каждое блюдо — это история.
                     </p>
-                    
-                    <!-- Каллиграфическая подпись -->
                     <div class="mt-8">
                         <div class="text-5xl text-brand-gold/80 select-none pb-2" style="font-family: 'Brush Script MT', 'Segoe Script', 'Snell Roundhand', cursive;">
                             M. Rossi
@@ -124,7 +108,6 @@
                     </div>
                 </div>
 
-                <!-- Правая часть: Фото с подписью на нем -->
                 <div class="w-full lg:w-1/2 flex justify-center lg:justify-end mt-10 lg:mt-0 relative reveal delay-200">
                     <div class="relative w-full max-w-[400px] lg:max-w-[500px]">
                         <div class="p-3 border border-brand-gold/40 rounded-sm shadow-[0_0_40px_rgba(255,215,0,0.1)] relative">
@@ -144,18 +127,15 @@
         </div>
     </section>
 
-    <!-- 3. МЕНЮ (La Carta) -->
+    <!-- 3. МЕНЮ -->
     <section id="menu" class="py-32 bg-brand-dark border-t border-white/5 relative">
-        
         <div class="max-w-4xl mx-auto px-6 lg:px-8 relative z-10">
-            
             <div class="text-center mb-16">
                 <h2 class="text-4xl lg:text-6xl font-serif text-white mb-6">La Carta</h2>
                 <p class="text-brand-gold tracking-[0.3em] uppercase text-xs font-semibold">Наше меню</p>
                 <div class="w-16 h-px bg-brand-gold mx-auto mt-6"></div>
             </div>
 
-            <!-- Кнопки категорий -->
             <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-16 border-b border-white/10 pb-4">
                 <button class="menu-tab-btn active text-[11px] uppercase tracking-widest font-semibold pb-2" onclick="openMenuTab('antipasti', this)">Antipasti</button>
                 <button class="menu-tab-btn text-[11px] uppercase tracking-widest font-semibold pb-2" onclick="openMenuTab('primi', this)">Primi</button>
@@ -371,8 +351,8 @@
 
         </div>
     </section>
-	
-    <!-- ПРЕССА -->
+
+        <!-- ПРЕССА -->
     <section class="py-24 bg-brand-dark border-t border-white/5">
         <div class="max-w-4xl mx-auto px-6 lg:px-8">
             
@@ -464,11 +444,10 @@
                 <div class="flex flex-col sm:flex-row items-center gap-4 text-[10px] text-gray-600 uppercase tracking-widest order-2 md:order-1">
                     <p>© 2026 Basilico Fine Dining</p>
                     <span class="hidden sm:inline">|</span>
-                    <!-- Ссылка без перехода -->
                     <a href="javascript:void(0)" class="hover:text-gray-400 transition-colors">Политика конфиденциальности</a>
                 </div>
 
-                <!-- Справа: Соцсети (пустые ссылки) -->
+                <!-- Справа: Соцсети -->
                 <div class="flex items-center gap-6 order-1 md:order-2">
                     <a href="javascript:void(0)" class="text-gray-500 hover:text-brand-gold transition-colors" aria-label="Instagram">
                         <i class="fa-brands fa-instagram text-lg"></i>
@@ -503,13 +482,14 @@
 
             <form id="modal-form" class="space-y-5" novalidate>
                 <div>
-                    <input type="text" id="modal-name" required placeholder="Ваше имя" class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white focus:outline-none focus:border-brand-gold font-light placeholder-gray-600">
+                    <!-- ДОБАВЛЕНЫ КЛАССЫ border-0 focus:ring-0 ДЛЯ УБИРАНИЯ УРОДЛИВЫХ РАМОК -->
+                    <input type="text" id="modal-name" required placeholder="Ваше имя" class="w-full bg-transparent border-0 border-b border-white/20 px-0 py-3 text-sm text-white focus:outline-none focus:ring-0 focus:border-brand-gold font-light placeholder-gray-600 transition-colors duration-300">
                     <p class="text-red-500 text-[10px] mt-1 hidden" id="name-error">Введите имя</p>
                 </div>
                 
                 <div>
-                    <input type="tel" id="modal-phone" required placeholder="+7 (777) 000-00-00" class="w-full bg-transparent border-b border-white/20 px-0 py-3 text-sm text-white focus:outline-none focus:border-brand-gold font-light placeholder-gray-600">
-                    <p class="text-red-500 text-[10px] mt-1 hidden" id="phone-error">Введите номер</p>
+                    <input type="tel" id="modal-phone" required placeholder="+7 (777) 000-00-00" class="w-full bg-transparent border-0 border-b border-white/20 px-0 py-3 text-sm text-white focus:outline-none focus:ring-0 focus:border-brand-gold font-light placeholder-gray-600 transition-colors duration-300">
+                    <p class="text-red-500 text-[10px] mt-1 hidden" id="phone-error">Введите корректный номер</p>
                 </div>
 
                 <div class="flex items-center gap-3 pt-2">
@@ -538,10 +518,8 @@
     <!-- ПЛАВАЮЩАЯ КНОПКА БРОНИРОВАНИЯ (Только мобилки) -->
     <div id="floating-btn" class="fixed bottom-6 left-0 w-full px-6 z-40 flex justify-center lg:hidden pointer-events-none transition-all duration-500 translate-y-0 opacity-100">
         
-        <!-- Легкая кнопка-контур -->
         <button onclick="openModal()" class="pointer-events-auto bg-black/60 backdrop-blur-md border border-brand-gold/60 text-brand-gold font-semibold py-3 px-8 rounded-sm shadow-[0_10px_30px_rgba(0,0,0,0.8)] active:scale-[0.98] transition-all duration-300 text-[11px] tracking-[0.2em] uppercase flex items-center justify-center gap-2">
             
-            <!-- Тонкая иконка бокала -->
             <i class="fa-solid fa-wine-glass text-brand-gold text-xs"></i>
             
             Забронировать

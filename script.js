@@ -20,15 +20,19 @@ function openModal() {
         // Очищаем старые текстовые ошибки
         ['name-error', 'phone-error', 'agree-error'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
         
-        // Очищаем красные обводки (кольца) с полей ввода
+        // Очищаем красную нижнюю линию с полей ввода
         ['modal-name', 'modal-phone'].forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.classList.remove('border-red-400', 'ring-red-100', 'ring-4');
+            if (el) el.classList.remove('!border-red-500');
         });
         
         // Удаляем глобальную плашку ошибки, если она была
         const errBox = document.getElementById('form-global-error');
         if (errBox) errBox.remove();
+
+        // Возвращаем стандартный текст ошибки имени (если меняли на "только буквы")
+        const nameError = document.getElementById('name-error');
+        if (nameError) nameError.textContent = 'Введите имя';
     }
     if (modalSuccess) modalSuccess.classList.add('hidden');
     if (modal) modal.classList.remove('hidden');
@@ -65,24 +69,30 @@ async function handleFormSubmit(e) {
     if (!nameInput || !phoneInput) return;
 
     // 1. Сбрасываем старые ошибки перед новой проверкой
-    [nameInput, phoneInput].forEach(i => i.classList.remove('border-red-400', 'ring-red-100', 'ring-4'));
+    [nameInput, phoneInput].forEach(i => i.classList.remove('!border-red-500'));
     if (nameError) nameError.classList.add('hidden');
     if (phoneError) phoneError.classList.add('hidden');
     if (agreeError) agreeError.classList.add('hidden');
 
     let valid = true;
 
-    // 2. Проверка Имени
-    if (!nameInput.value.trim()) {
-        nameInput.classList.add('border-red-400', 'ring-red-100', 'ring-4');
-        if (nameError) nameError.classList.remove('hidden');
+    // 2. СТРОГАЯ Проверка Имени (только буквы, пробел и дефис, минимум 2 символа)
+    const nameValue = nameInput.value.trim();
+    const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\s\-]+$/; 
+    
+    if (nameValue.length < 2 || !nameRegex.test(nameValue)) {
+        nameInput.classList.add('!border-red-500');
+        if (nameError) {
+            nameError.textContent = 'Только буквы (мин. 2 символа)';
+            nameError.classList.remove('hidden');
+        }
         valid = false;
     }
 
     // 3. Проверка Телефона (только цифры, длина строго от 10 до 11)
     const digits = phoneInput.value.replace(/\D/g, '');
     if (digits.length < 10 || digits.length > 11) {
-        phoneInput.classList.add('border-red-400', 'ring-red-100', 'ring-4');
+        phoneInput.classList.add('!border-red-500');
         if (phoneError) phoneError.classList.remove('hidden');
         valid = false;
     }
@@ -111,7 +121,7 @@ async function handleFormSubmit(e) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                name: nameInput.value, 
+                name: nameValue, 
                 phone: phoneInput.value 
             })
         });
@@ -123,7 +133,7 @@ async function handleFormSubmit(e) {
         if (modalForm) modalForm.classList.add('hidden');
         if (modalSuccess) modalSuccess.classList.remove('hidden');
         
-        // Очищаем форму после успешной отправки (чтобы при следующем открытии было пусто)
+        // Очищаем форму после успешной отправки
         modalForm.reset();
         setTimeout(closeModal, 4000);
 
