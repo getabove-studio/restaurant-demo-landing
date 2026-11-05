@@ -1,0 +1,133 @@
+/* =========================================
+   1. БАЗОВЫЕ НАСТРОЙКИ
+   ========================================= */
+html { scroll-padding-top: 100px; }
+body { -webkit-tap-highlight-color: transparent; }
+body.modal-open, body.menu-open { overflow: hidden; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0A0A0A; }
+::-webkit-scrollbar-thumb { background: #FFD700; border-radius: 3px; } /* Яркое золото */
+
+/* =========================================
+   2. АНИМАЦИИ И ХОВЕР-ЭФФЕКТЫ
+   ========================================= */
+a, button, .group {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-gold { position: relative; overflow: hidden; z-index: 1; }
+.btn-gold::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s ease; z-index: -1;
+}
+.btn-gold:hover::before { left: 100%; }
+.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 215, 0, 0.4); }
+
+.menu-item { position: relative; }
+.menu-item:hover { transform: translateX(5px); }
+.menu-item .dotted-line { transition: all 0.3s ease; }
+.menu-item:hover .dotted-line { border-color: #FFD700; border-style: solid; }
+
+.review-card { transition: all 0.4s ease; }
+.review-card:hover {
+    transform: translateY(-8px); background-color: #141414;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5); border-color: rgba(255, 215, 0, 0.4);
+}
+
+.social-icon { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s; }
+.social-icon:hover { transform: scale(1.2) translateY(-2px); }
+
+/* =========================================
+   3. АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
+   ========================================= */
+.reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+.delay-200 { transition-delay: 200ms; }
+
+/* =========================================
+   4. СТИЛИ ДЛЯ ВКЛАДОК МЕНЮ
+   ========================================= */
+.menu-tab-content {
+    display: none;
+    animation: fadeInMenu 0.6s ease forwards;
+}
+.menu-tab-content.active {
+    display: block;
+}
+@keyframes fadeInMenu {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Стили для кнопок-табов */
+.menu-tab-btn {
+    color: rgba(255, 255, 255, 0.4);
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.menu-tab-btn:hover {
+    color: #FFD700;
+}
+.menu-tab-btn.active {
+    color: #FFD700;
+    border-bottom-color: #FFD700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+/* =========================================
+   c ГЛОБАЛЬНОЕ ЗОЛОТОЕ СВЕЧЕНИЕ
+   ========================================= */
+
+/* Текст с засечками (цены, заголовки) */
+.text-glow-gold {
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2);
+}
+
+/* Для всех элементов, использующих класс text-brand-gold */
+[class*="text-brand-gold"] {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+/* Блокировка скролла при открытом меню */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* =========================================
+   6. СКРЫТИЕ СКРОЛЛБАРА (Но прокрутка работает)
+   ========================================= */
+
+/* Для Chrome, Safari, Opera и мобильных браузеров */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+/* Для Firefox */
+html {
+    scrollbar-width: none;
+}
+
+/* Для IE и старых Edge */
+body {
+    -ms-overflow-style: none;
+}
+
+/* =========================================
+   7. ПОЛНОЕ УДАЛЕНИ ПЛАШКИ NETLIFY
+   ========================================= */
+#nl-badge-frame,
+iframe[id="nl-badge-frame"],
+iframe[title="Powered by Netlify"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    height: 0 !important;
+    width: 0 !important;
+}
